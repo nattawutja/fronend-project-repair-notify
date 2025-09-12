@@ -517,7 +517,8 @@ export default function RepairNotify() {
               >
                 <option value="">กรุณาเลือก</option>
                 <option value="0">รอ IT ตรวจสอบ</option>
-                <option value="1">จบงาน</option>
+                <option value="1">รอผู้แจ้งตรวจสอบ</option>
+                <option value="2">จบงาน</option>
               </select>
           </div>
 
