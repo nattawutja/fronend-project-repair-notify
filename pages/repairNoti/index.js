@@ -9,6 +9,7 @@ import Head from 'next/head';
 export default function RepairNotify() {
 
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [countData, setShowcountData] = useState(0);
   const [data, setData] = useState();
@@ -81,6 +82,8 @@ export default function RepairNotify() {
 
       } catch (err) {
         console.error("เกิดข้อผิดพลาด fetch index:", err);
+      }finally {
+        setLoading(false);
       }
     };
 
@@ -306,8 +309,13 @@ export default function RepairNotify() {
     window.open(`/repairNoti/view?id=${id}`, '_blank');
   };
 
-  return (
-    
+  return loading ? (
+    <div className="flex flex-col items-center justify-center min-h-screen gap-4 pt-5 bg-white ">
+      <div className="loader">
+        
+      </div>
+    </div>
+  ) : (
     <div className="flex flex-col items-center justify-start min-h-screen gap-4 pt-5 bg-white ">
       <Head>
         <title>ระบบการแจ้งซ่อมเครื่อง</title>
