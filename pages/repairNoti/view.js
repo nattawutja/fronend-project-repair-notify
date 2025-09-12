@@ -1,5 +1,5 @@
 "use client";
-import { FaUserCircle,FaPrint,FaTrash } from 'react-icons/fa';
+import { FaUserCircle,FaPrint,FaTrash,FaTimes,FaCheck } from 'react-icons/fa';
 import React,{ useState,useEffect } from 'react';
 import { useSearchParams,useRouter } from 'next/navigation';
 import Head from 'next/head';
@@ -8,6 +8,7 @@ export default function RepairNotifyView() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [openModalDelete, setOpenModalDelete] = useState(false);
 
   const [data, setData] = useState(null); //ถ้า obj ใช้แบบนี้
   const [dataApprove, setDataApprove] = useState([]);  //ถ้า Array ใช้แบบนี้
@@ -93,7 +94,7 @@ useEffect(() => {
         method: "GET",
       });
 
-      router.push(`/repairNotify/`);
+      router.push(`/repairNoti/`);
     } catch (error) {
       console.error("Error printing PDF:", error);
     }
@@ -122,33 +123,19 @@ useEffect(() => {
     }
   };
 
+  const openModalDeleteData  = async () => {
+    setOpenModalDelete(true);
+  };
+
+  const closeModalDelete = () => {
+    setOpenModalDelete(false);
+  }
+
   return loading ? (
     
   <div className="flex flex-col items-center justify-center min-h-screen gap-4 pt-5 bg-white ">
-    
-    <div className="flex space-x-4 animate-pulse">
-      <button
-        type="button"
-        className="flex items-center px-4 py-2 text-white bg-indigo-500 rounded"
-        disabled
-      >
-        <svg
-          className="w-5 h-5 mr-3 text-white animate-spin"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          ></circle>
-        </svg>
-        กำลังโหลด...
-      </button>
+    <div className="loader">
+      
     </div>
   </div>
 ) : (
@@ -181,9 +168,12 @@ useEffect(() => {
                 <button  onClick={PrintPdf} title="พิมพ์" className="text-gray-600 cursor-pointer hover:text-black ms-2">
                   <FaPrint size={13} />
                 </button>
-                <button  onClick={DeleteData} className="text-red-600 cursor-pointer ms-2">
+                <button  onClick={openModalDeleteData} className="text-red-600 cursor-pointer ms-2">
                   <FaTrash size={13} />
                 </button>
+
+              
+
               </div>
 
               {/* ตารางข้อมูลคำร้องเรียน */}
@@ -271,5 +261,42 @@ useEffect(() => {
         </tbody>
       </table>
     </div>
+
+   {openModalDelete && (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+      
+      <div className="w-full max-w-md bg-white rounded-lg shadow-lg">
+        <div className="px-4 py-2 border-b border-gray-200">
+          <h2 className="font-bold text-red-500 text-md">ยืนยันการลบรายการนี้</h2>
+        </div>
+        
+        <div className="px-3 py-4 text-gray-800">
+          <p className="text-black ">คุณต้องการลบข้อมูลนี้ใช่หรือไม่ ?</p>
+        </div>
+        
+        <div className="flex justify-end px-6 py-4 space-x-3 border-t border-gray-200 bg-gray-50">
+          <button
+            onClick={DeleteData}
+            className="flex items-center gap-2 px-4 py-1 text-white bg-green-600 rounded hover:bg-green-700"
+          >
+            <FaCheck className="text-white" />
+            ยืนยัน
+          </button>
+          <button
+            onClick={closeModalDelete}
+            className="flex items-center gap-2 px-4 py-1 text-white bg-red-600 rounded hover:bg-red-700"
+
+          >
+            <FaTimes className="text-white" />
+            ยกเลิก
+          </button>
+         
+        </div>
+      </div>
+
+    </div>
+   )}
+    
+
   </div>
 )}
