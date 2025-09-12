@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
@@ -12,6 +12,8 @@ export default function Home() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
     const sendDataLogin = async (e) => {
       e.preventDefault();
@@ -74,8 +76,11 @@ export default function Home() {
                 <input
                   name="username"
                   type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
                   className="w-full px-4 py-2 mt-2 text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="ชื่อผู้ใช้งาน"
+
                 />
               </div>
           
@@ -87,6 +92,8 @@ export default function Home() {
                 <input
                   name="password"
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-2 mt-2 text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="รหัสผ่าน"
                 />
