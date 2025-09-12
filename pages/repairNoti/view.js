@@ -24,37 +24,42 @@ export default function RepairNotifyView() {
     tbAssetID: '',
     tbDesc: '',
   });
+  const [fullname, setFullname] = useState("");
 
 useEffect(() => {
   const queryId = searchParams.get("id");
+  const name = localStorage.getItem("fullname");
 
   if (!queryId) {
     return;
   }
+  
+  if (name) {
+    setFullname(name);
+  }
 
-    const fetchIndex = async () => {
-        try {
-            const res = await fetch(`http://localhost:8000/getDataView.php?id=${queryId}`);
-            const json = await res.json();
-            console.log("ข้อมูลที่ได้:", json);
-            setData(json[0]);
-        } catch (err) {
-            console.error("เกิดข้อผิดพลาด fetch index:", err);
-        } 
-    };
+  const fetchIndex = async () => {
+    try {
+      const res = await fetch(`http://localhost:8000/getDataView.php?id=${queryId}`);
+      const json = await res.json();
+      console.log("ข้อมูลที่ได้:", json);
+      setData(json[0]);
+    } catch (err) {
+      console.error("เกิดข้อผิดพลาด fetch index:", err);
+    } 
+  };
 
-    const fetchDataApprove = async () => {
-        try {
-            const resApprove = await fetch(`http://localhost:8000/getDataApprove.php?id=${queryId}`);
-            const json = await resApprove.json();
-            setDataApprove(json);
-        } catch (err){
-            console.error("เกิดข้อผิดพลาด fetchDataApprove", err);
-        }finally {
-            setLoading(false);
-        }
-    };
-
+  const fetchDataApprove = async () => {
+    try {
+      const resApprove = await fetch(`http://localhost:8000/getDataApprove.php?id=${queryId}`);
+      const json = await resApprove.json();
+      setDataApprove(json);
+    } catch (err){
+      console.error("เกิดข้อผิดพลาด fetchDataApprove", err);
+    }finally {
+      setLoading(false);
+    }
+  };
 
   fetchIndex();
   fetchDataApprove();
@@ -64,7 +69,7 @@ useEffect(() => {
   const PrintPdf = async () => {
     const queryId = searchParams.get("id");
     if (!queryId) {
-        return;
+      return;
     }
     try {
       const response = await fetch(`http://localhost:8000/printFormPdf.php?id=${queryId}`, {
@@ -79,8 +84,12 @@ useEffect(() => {
   };
 
   const DeleteData = async () => {
+    const queryId = searchParams.get("id");
+    if (!queryId) {
+      return;
+    }
     try {
-      const response = await fetch(`http://localhost:8000/DeleteData.php?id=${id}`, {
+      const response = await fetch(`http://localhost:8000/DeleteData.php?id=${queryId}`, {
         method: "GET",
       });
 
@@ -90,17 +99,18 @@ useEffect(() => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const sendDataApprove = async (val,posid) => {
+    const queryId = searchParams.get("id");
+    if (!queryId) {
+      return;
+    }
+    console.log(val);
     try {
-      const response = await fetch("http://localhost:8000/save.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const response = await fetch(`http://localhost:8000/saveApprove.php?id=${val}&idrp=${queryId}&posid=${posid}`, {
+        method: "GET",
       });
       const resData = await response.json();
+      //console.log(resData);
       if (resData.success) {
         alert("บันทึกสำเร็จ");
         window.location.reload();
@@ -109,7 +119,6 @@ useEffect(() => {
       }
     } catch (error) {
       console.error("เกิดข้อผิดพลาด", error);
-      alert("เกิดข้อผิดพลาด");
     }
   };
 
@@ -156,7 +165,7 @@ useEffect(() => {
           </tr>
         </thead>
         <tbody className='bg-white'>
-          <tr className="text-xs text-black align-top">
+          <tr className="text-xs text-black align-top ">
             {/* คอลัมน์: โดย */}
         
             <td className="py-4 text-center border-r border-gray-300">
@@ -169,10 +178,10 @@ useEffect(() => {
             <td className="px-4 py-3">
               <div className="mb-2">
                 <span className="text-xs font-semibold">วันที่บันทึก : {data?.cvcreatedate} น.</span>
-                <button   onClick={PrintPdf} title="พิมพ์" className="text-gray-600 cursor-pointer hover:text-black ms-2">
+                <button  onClick={PrintPdf} title="พิมพ์" className="text-gray-600 cursor-pointer hover:text-black ms-2">
                   <FaPrint size={13} />
                 </button>
-                <button   onClick={DeleteData} className="text-red-600 cursor-pointer ms-2">
+                <button  onClick={DeleteData} className="text-red-600 cursor-pointer ms-2">
                   <FaTrash size={13} />
                 </button>
               </div>
@@ -180,7 +189,7 @@ useEffect(() => {
               {/* ตารางข้อมูลคำร้องเรียน */}
               <table className="w-full mb-4 border border-gray-300 table-auto">
                 <thead>
-                  <tr className="text-sm text-white" style={{backgroundColor:"#fdd70a82"}}>
+                  <tr className="text-sm text-white " style={{backgroundColor:"#fdd70a82"}}>
                     <th colSpan={2} className="px-4 py-2 text-center text-black">ข้อมูลคำร้อง</th>
                   </tr>
                 </thead>
@@ -237,7 +246,19 @@ useEffect(() => {
                     <tr key={item.ApproveID}>
                       <td className="px-4 py-2 text-center border border-gray-300">{index + 1}</td>
                       <td className="px-4 py-2 text-center border border-gray-300">{item.fullName}</td>
-                      <td className="px-4 py-2 text-center border border-gray-300"></td>
+                      <td className="px-4 py-2 text-center border border-gray-300">
+                        {
+                          item.Approve == "Y" ? 
+                          ( 
+                            <label className="font-bold text-green-600">Complete<br></br>{item.cvdateapprovedate} {item.cvdateapprovetime} น.</label>
+                          ) : 
+                          (
+                            <button onClick={() => (sendDataApprove(item.ApproveID,item.pos_id))} type="button" className="px-3 py-2 text-center text-white bg-green-600 rounded hover:bg-green-400 disabled:bg-green-600 disabled:cursor-not-allowed"  disabled={fullname != item.fullName}>
+                              ส่งงาน / รับงาน
+                            </button>
+                          )
+                        }
+                      </td>
                     </tr>
                   ))}
 
