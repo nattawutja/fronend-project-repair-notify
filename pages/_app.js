@@ -1,5 +1,15 @@
-import "@/styles/globals.css";
+import '../styles/globals.css'
+import TopBar from '../component/Topbar'
+import Footer  from '../component/Footer'
 
-export default function App({ Component, pageProps }) {
-  return <Component {...pageProps} />;
+function MyApp({ Component, pageProps }) {
+  return (
+    <>
+      <TopBar/>
+      <Component {...pageProps} />
+      <Footer/>
+    </>
+  )
 }
+
+export default MyApp
