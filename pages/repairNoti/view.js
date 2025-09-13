@@ -168,7 +168,9 @@ useEffect(() => {
                 <button  onClick={PrintPdf} title="พิมพ์" className="text-gray-600 cursor-pointer hover:text-black ms-2">
                   <FaPrint size={13} />
                 </button>
-                <button  onClick={openModalDeleteData} className="text-red-600 cursor-pointer ms-2">
+                <button  onClick={openModalDeleteData} className={`text-red-600 ms-2 cursor-pointer ${fullname != data?.EmpName ? "hidden" : ""}`} 
+                disabled={data?.EmpName != fullname}
+                >
                   <FaTrash size={13} />
                 </button>
 
@@ -243,7 +245,9 @@ useEffect(() => {
                             <label className="font-bold text-green-600">Complete<br></br>{item.cvdateapprovedate} {item.cvdateapprovetime} น.</label>
                           ) : 
                           (
-                            <button onClick={() => (sendDataApprove(item.ApproveID,item.pos_id))} type="button" className="px-3 py-2 text-center text-white bg-green-600 rounded hover:bg-green-400 disabled:bg-green-600 disabled:cursor-not-allowed"  disabled={fullname != item.fullName}>
+                            <button onClick={() => (sendDataApprove(item.ApproveID,item.pos_id))} type="button" className={`px-3 py-2 text-center text-white bg-green-600 rounded hover:bg-green-400 disabled:bg-green-600 disabled:cursor-not-allowed ${fullname != item.fullName ? 'opacity-50' : '' }
+                            `}  
+                            disabled={fullname != item.fullName}>
                               ส่งงาน / รับงาน
                             </button>
                           )
