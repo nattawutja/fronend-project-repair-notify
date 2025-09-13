@@ -12,8 +12,6 @@ export default function Home() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
 
     const sendDataLogin = async (e) => {
       e.preventDefault();
@@ -23,7 +21,8 @@ export default function Home() {
       const username = formData.get("username");
       const password = formData.get("password");
   
-
+      // console.log(new FormData(e.currentTarget));
+      // return false;
       const res = await fetch("http://localhost:8000/checklogin.php", {
         method: "POST",
         headers: {
@@ -33,6 +32,7 @@ export default function Home() {
       });
 
       const result = await res.json();
+      //console.log(result.fullname,"<-----------fullnameindex.js");
       if (result.Status == "Success") {
         localStorage.setItem("fullname", result.fullname); // เช่น "ชื่อจริง นามสกุล"
         setTimeout(() => {
@@ -76,8 +76,6 @@ export default function Home() {
                 <input
                   name="username"
                   type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
                   className="w-full px-4 py-2 mt-2 text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="ชื่อผู้ใช้งาน"
 
@@ -92,8 +90,6 @@ export default function Home() {
                 <input
                   name="password"
                   type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
                   className="w-full px-4 py-2 mt-2 text-black bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="รหัสผ่าน"
                 />
