@@ -70,7 +70,7 @@ export default function RepairNotify() {
 
   useEffect(() => {
 
-    console.log(localStorage.getItem("fullname"))
+    //console.log(localStorage.getItem("fullname"))
 
 
     const fetchIndex = async () => {
