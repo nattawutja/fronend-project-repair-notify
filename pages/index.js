@@ -32,7 +32,6 @@ export default function Home() {
       });
 
       const result = await res.json();
-      //console.log(result.fullname,"<-----------fullnameindex.js");
       if (result.Status == "Success") {
         localStorage.setItem("fullname", result.fullname); // เช่น "ชื่อจริง นามสกุล"
         setTimeout(() => {
