@@ -40,7 +40,8 @@ export default function Home() {
           router.push("/repairNoti");
         }, 100);
       } else {
-        alert("Login failed");
+        alert("เข้าสู่ระบบไม่สำเร็จ โปรดตรวจสอบความถูกต้องของชื่อผู้ใช้งาน และ รหัสผ่าน ของท่าน");
+        setLoading(false);
       }
      
     };
