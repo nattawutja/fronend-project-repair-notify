@@ -13,7 +13,7 @@ export default function RepairNotify() {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [countData, setShowcountData] = useState(0);
   const [data, setData] = useState();
-  
+
   const [formData, setFormData] = useState({
     tbDateNoti: '',
     tbDptCode: '',
@@ -69,9 +69,6 @@ export default function RepairNotify() {
   }, [formData.tbToolNumber]);
 
   useEffect(() => {
-
-    //console.log(localStorage.getItem("fullname"))
-
 
     const fetchIndex = async () => {
       try {
@@ -163,15 +160,25 @@ export default function RepairNotify() {
       return false;
     }
 
+    const fullname = localStorage.getItem("fullname");
+    const id = localStorage.getItem("ID");
+
+    const dataToSend = {
+      ...formData,
+      fullname: fullname,
+      userID: id
+    };
+
     try {
       const response = await fetch("http://localhost:8000/save.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataToSend),
       });
       const resData = await response.json();
+      //console.log(resData);
       if (resData.success) {
         alert("บันทึกสำเร็จ");
         window.location.reload();
@@ -556,9 +563,10 @@ export default function RepairNotify() {
       </form>
           
         <div className="flex flex-col justify-center mt-5 ">
-          <div className="flex flex-col items-end justify-center mb-2 text-black underline" >
+          <div className="flex flex-col items-end justify-end mb-2 text-black underline" >
             <label className="">จำนวนข้อมูลทั้งหมด : {countData} รายการ</label>
           </div>
+          
           <table className="w-full border border-collapse border-gray-300 rounded shadow-md table-auto">
             <thead>
               <tr className="text-xs text-black " style={{backgroundColor:"#fdd70a82"}}>
@@ -579,7 +587,7 @@ export default function RepairNotify() {
             </thead>
             <tbody> 
               {(data || []).map((item, index) => (
-                <tr onClick={() => handleRowClick(item.RepairID)} key={item.RepairID} className="cursor-pointer text-black text-xs even:bg-white odd:bg-[#ecf0f0] hover:bg-blue-100">
+                <tr onClick={() => handleRowClick(item.RepairID)} key={item.RepairID} className={`cursor-pointer text-black text-xs  hover:bg-blue-100 ${item.status == 'จบงาน' ? 'bg-green-400' : item.status == 'รอผู้แจ้งตรวจสอบ' ? 'bg-orange-400' : 'even:bg-white odd:bg-[#ecf0f0]'} `}>
                   <td className="px-4 py-2 text-center border">{index + 1 + (currentPage * itemsPerPage)}</td>
                   <td className="px-4 py-2 text-center border">{item.RepairNo}</td>
                   <td className="px-4 py-2 border">{item.DptCode}</td>
@@ -614,6 +622,20 @@ export default function RepairNotify() {
 
 
 
+          <div className="flex flex-col items-center justify-center mt-2" >
+            <label className="text-black underline " style={{textDecoration: 'underline',textDecorationStyle: 'double'}}>คำอธิบายเพิ่มเติม</label>
+          
+          </div>
+
+          <div className="flex flex-row items-center justify-center" >
+            <div className="w-5 h-5 mt-2 bg-orange-400 ms-10"></div>
+            <div className="mt-2 text-black ms-3">: รอผู้แจ้งตรวจสอบ</div>
+          </div>
+
+          <div className="flex flex-row items-center justify-center mb-3" >
+            <div className="w-5 h-5 mt-2 bg-green-400 me-3"></div>
+            <div className="mt-2 text-black me-8">: จบงาน</div>
+          </div>
 
         </div>
         
