@@ -34,6 +34,8 @@ export default function Home() {
       const result = await res.json();
       if (result.Status == "Success") {
         localStorage.setItem("fullname", result.fullname); // เช่น "ชื่อจริง นามสกุล"
+        localStorage.setItem("ID", result.id); // ID
+        //console.log(result);
         setTimeout(() => {
           router.push("/repairNoti");
         }, 100);
