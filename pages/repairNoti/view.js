@@ -26,10 +26,12 @@ export default function RepairNotifyView() {
     tbDesc: '',
   });
   const [fullname, setFullname] = useState("");
+  const [id, setId] = useState("");
 
 useEffect(() => {
   const queryId = searchParams.get("id");
   const name = localStorage.getItem("fullname");
+  const idStorage = localStorage.getItem("id");
 
   if (!queryId) {
     return;
@@ -37,6 +39,9 @@ useEffect(() => {
   
   if (name) {
     setFullname(name);
+  }
+  if (idStorage) {
+    setId(idStorage);
   }
 
   const fetchIndex = async () => {
@@ -245,7 +250,7 @@ useEffect(() => {
                             <label className="font-bold text-green-600">Complete<br></br>{item.cvdateapprovedate} {item.cvdateapprovetime} น.</label>
                           ) : 
                           (
-                            <button onClick={() => (sendDataApprove(item.ApproveID,item.pos_id))} type="button" className={`px-3 py-2 text-center text-white bg-green-600 rounded hover:bg-green-400 disabled:bg-green-600 disabled:cursor-not-allowed ${fullname != item.fullName ? 'opacity-50' : '' }
+                            <button onClick={() => (sendDataApprove(item.ApproveID,item.pos_id))} type="button" className={`px-3 py-2 text-center text-white bg-green-600 rounded hover:bg-green-400 disabled:bg-green-600 disabled:cursor-not-allowed ${fullname != item.fullName && id != item.user_id ? 'opacity-50' : '' }
                             `}  
                             disabled={fullname != item.fullName}>
                               ส่งงาน / รับงาน
