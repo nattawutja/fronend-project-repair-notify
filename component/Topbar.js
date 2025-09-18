@@ -2,6 +2,7 @@ import Link from "next/link";
 import { FaSignOutAlt,FaUserCircle } from "react-icons/fa";
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function TopBar({ isLoading }) {
     const [fullName , setFullname] = useState("");
@@ -30,13 +31,24 @@ export default function TopBar({ isLoading }) {
         window.location.href = "/";
     };
     
+    const handleHome = () => {
+        window.location.href = "/repairNoti";
+    };
+
     return (
 
         <nav className="text-gray-600 bg-gray-200 shadow-md">
             <div className="flex items-center justify-between px-4 py-3 mx-auto max-w-7xl">
                 {/* Logo */}
                 <div className="text-xl font-bold tracking-wide">
-                
+                    <button onClick={handleHome} className="flex items-center gap-2 cursor-pointer hover:underline">
+                    <Image
+                    src="/waiwailogo.png"
+                    alt="My Photo"
+                    width={70}
+                    height={50}
+                    />
+                    </button>
                 </div>
 
                 {/* Menu Items */}
