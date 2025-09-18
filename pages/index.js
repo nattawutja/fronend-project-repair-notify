@@ -35,6 +35,9 @@ export default function Home() {
       if (result.Status == "Success") {
         localStorage.setItem("fullname", result.fullname); // เช่น "ชื่อจริง นามสกุล"
         localStorage.setItem("ID", result.id); // ID
+        localStorage.setItem("dptcode", result.dpt_code); // Department
+        localStorage.setItem("dvicode", result.dvi_code); // Division
+        localStorage.setItem("name_dvi", result.name_dvi); // nameDivision
         //console.log(result);
         setTimeout(() => {
           router.push("/repairNoti");
