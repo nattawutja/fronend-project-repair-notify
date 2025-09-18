@@ -42,11 +42,13 @@ export default function RepairNotify() {
     tbDocNoSearch: '',
     tbStatusWorkSearch: '',
     tbEmpNameSearch: '',
+    tbDviNameSearch: '',
     tbpage: 0
   });
 
   const [devices, setDevices] = useState([]);
   const [departments, setDepartment] = useState([]);
+  const [division, setDivision] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(0); // 0-based index
 
@@ -104,9 +106,20 @@ export default function RepairNotify() {
       }
     };
 
+    const fetchDivision = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/getMasterDvi.php");
+        const json = await res.json();
+        setDivision(json);
+      } catch (err) {
+        console.error("เกิดข้อผิดพลาด fetch division:", err);
+      }
+    };
+
   fetchIndex();
   fetchDevices();
   fetchDepartment();
+  fetchDivision();
   }, []);
 
   const openModalAdd = async () => {
@@ -122,11 +135,6 @@ export default function RepairNotify() {
 
     if(formData.tbDateNoti == ""){
       alert("กรุณาระบุวันที่แจ้ง");
-      return false;
-    }
-
-    if(formData.tbNameEmp == ""){
-      alert("กรุณาระบุชื่อพนักงาน");
       return false;
     }
 
@@ -162,11 +170,15 @@ export default function RepairNotify() {
 
     const fullname = localStorage.getItem("fullname");
     const id = localStorage.getItem("ID");
+    const dptcode = localStorage.getItem("dptcode");
+    const dvicode = localStorage.getItem("dvicode");
 
     const dataToSend = {
       ...formData,
       fullname: fullname,
-      userID: id
+      userID: id,
+      dpt_code: dptcode,
+      dvi_code: dvicode
     };
 
     try {
@@ -208,6 +220,7 @@ export default function RepairNotify() {
         tbModelSearch: formDataSearch.tbModelSearch,
         tbAssetIDSearch: formDataSearch.tbAssetIDSearch,
         tbStatusWorkSearch: formDataSearch.tbStatusWorkSearch,
+        tbDviNameSearch: formDataSearch.tbDviNameSearch,
         tbEmpNameSearch: formDataSearch.tbEmpNameSearch
       });
 
@@ -242,6 +255,7 @@ export default function RepairNotify() {
         tbModelSearch: formDataSearch.tbModelSearch,
         tbAssetIDSearch: formDataSearch.tbAssetIDSearch,
         tbStatusWorkSearch: formDataSearch.tbStatusWorkSearch,
+        tbDviNameSearch: formDataSearch.tbDviNameSearch,
         tbEmpNameSearch: formDataSearch.tbEmpNameSearch
       });
 
@@ -295,6 +309,7 @@ export default function RepairNotify() {
         tbAssetIDSearch: formDataSearch.tbAssetIDSearch,
         tbStatusWorkSearch: formDataSearch.tbStatusWorkSearch,
         tbEmpNameSearch: formDataSearch.tbEmpNameSearch,
+        tbDviNameSearch: formDataSearch.tbDviNameSearch,
         tbpage: event.selected.toString()
       });
 
@@ -363,6 +378,25 @@ export default function RepairNotify() {
               placeholder="ระบุเลขที่เอกสาร"
               className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
+          </div>
+
+          <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
+            <label className="mb-1 text-sm font-medium text-black">ฝ่าย</label>
+            <select
+              name="tbDviNameSearch"
+              value={formDataSearch.tbDviNameSearch}
+              onChange={(e) =>
+                setFormDataSearch({ ...formDataSearch, tbDviNameSearch: e.target.value })
+              }
+              className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="">กรุณาเลือก</option>
+              {division.map((divisions) => (
+                <option key={divisions.code} value={divisions.code}>
+                  {divisions.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
@@ -464,7 +498,7 @@ export default function RepairNotify() {
           </div>
 
 
-          <div className="flex flex-col justify-center col-span-3 mt-2 ml-4 md:col-span-3">
+          <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
             <label className="mb-1 text-sm font-medium text-black">หมายเลขเครื่อง</label>
             <input
               name="tbToolNumberSearch"
@@ -478,7 +512,7 @@ export default function RepairNotify() {
             />
           </div>
               
-          <div className="flex flex-col justify-center col-span-3 mt-2 ml-4 md:col-span-3">
+          <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
             <label className="mb-1 text-sm font-medium text-black">รหัสทรัพย์สิน</label>
             <input
               name="tbAssetIDSearch"
@@ -532,8 +566,9 @@ export default function RepairNotify() {
               >
                 <option value="">กรุณาเลือก</option>
                 <option value="0">รอ IT ตรวจสอบ</option>
-                <option value="1">รอผู้แจ้งตรวจสอบ</option>
-                <option value="2">จบงาน</option>
+                <option value="1">กำลังดำเนินการ</option>
+                <option value="2">รอผู้แจ้งตรวจสอบ</option>
+                <option value="3">จบงาน</option>
               </select>
           </div>
 
@@ -574,6 +609,7 @@ export default function RepairNotify() {
                 <th className="px-4 py-2 text-center border">เลขที่เอกสาร</th>
                 <th className="px-4 py-2 text-center border">รหัสแผนก</th>
                 <th className="px-4 py-2 text-center border">แผนก</th>
+                <th className="px-4 py-2 text-center border">ฝ่าย</th>
                 <th className="px-4 py-2 text-center border">ประเภท</th>
                 <th className="px-4 py-2 text-center border">ชนิดอุปกรณ์</th>
                 <th className="px-4 py-2 text-center border">หมายเลขเครื่อง</th>
@@ -587,11 +623,12 @@ export default function RepairNotify() {
             </thead>
             <tbody> 
               {(data || []).map((item, index) => (
-                <tr onClick={() => handleRowClick(item.RepairID)} key={item.RepairID} className={`cursor-pointer text-black text-xs  hover:bg-blue-100 ${item.status == 'จบงาน' ? 'bg-green-400' : item.status == 'รอผู้แจ้งตรวจสอบ' ? 'bg-orange-400' : 'even:bg-white odd:bg-[#ecf0f0]'} `}>
+                <tr onClick={() => handleRowClick(item.RepairID)} key={item.RepairID} className={`cursor-pointer text-black text-xs  hover:bg-blue-100 ${item.status == 'จบงาน' ? 'bg-green-400' : item.status == 'รอผู้แจ้งตรวจสอบ' ? 'bg-orange-400' : item.status == 'กำลังดำเนินการ' ? 'bg-blue-400' : 'even:bg-white odd:bg-[#ecf0f0]'} `}>
                   <td className="px-4 py-2 text-center border">{index + 1 + (currentPage * itemsPerPage)}</td>
                   <td className="px-4 py-2 text-center border">{item.RepairNo}</td>
                   <td className="px-4 py-2 border">{item.DptCode}</td>
-                  <td className="px-4 py-2 border">{item.DptName}</td>
+                  <td className="px-4 py-2 border">{item.name}</td>
+                  <td className="px-4 py-2 border">{item.dviname}</td>
                   <td className="px-4 py-2 text-center border">{item.systemname}</td>
                   <td className="px-4 py-2 border">{item.name_Device}</td>
                   <td className="px-4 py-2 text-center border">{item.DeviceToolID}</td>
@@ -622,7 +659,7 @@ export default function RepairNotify() {
 
 
 
-          <div className="flex flex-col items-center justify-center mt-2" >
+          {/* <div className="flex flex-col items-center justify-center mt-2" >
             <label className="text-black underline " style={{textDecoration: 'underline',textDecorationStyle: 'double'}}>คำอธิบายเพิ่มเติม</label>
           
           </div>
@@ -633,9 +670,14 @@ export default function RepairNotify() {
           </div>
 
           <div className="flex flex-row items-center justify-center mb-3" >
+            <div className="w-5 h-5 mt-2 bg-blue-400 ms-3"></div>
+            <div className="mt-2 text-black me-6">: กำลังดำเนินการ</div>
+          </div>
+
+          <div className="flex flex-row items-center justify-center mb-3" >
             <div className="w-5 h-5 mt-2 bg-green-400 me-3"></div>
             <div className="mt-2 text-black me-8">: จบงาน</div>
-          </div>
+          </div> */}
 
         </div>
         
@@ -647,14 +689,14 @@ export default function RepairNotify() {
               >
                 <form
                   onSubmit={handleSubmit}
-                  className="w-full max-w-4xl bg-white border border-black rounded-lg"
+                  className="w-full max-w-4xl bg-white border rounded-lg"
                   onClick={(e) => e.stopPropagation()} // ป้องกันคลิกในกล่องไม่ให้ปิด
                 >
                   {/* Head */}
                   
                 <div
-                    className="flex items-center justify-between px-6 py-4 border-b border-black"
-                    style={{ backgroundColor: "#fec235" }}
+                    className="flex items-center justify-between px-4 py-2 border-b border-white"
+                    style={{ backgroundColor: "#feeb82" }}
                   >
                     {/* ฝั่งซ้าย */}
                     <div>
@@ -677,7 +719,7 @@ export default function RepairNotify() {
                   </div>
 
                   <div className="grid grid-cols-4 gap-4 px-6 py-4 md:grid-cols-4">
-                    {/* ชุดที่ 1 */}
+                    
                     <div className="flex flex-col">
                       <label className="mb-1 text-sm font-medium text-black">วันที่</label>
                       <input
@@ -690,66 +732,7 @@ export default function RepairNotify() {
                         className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       />
                     </div>
-                    {/* ชุดที่ 2 */}
-                    <div className="flex flex-col">
-                      <label className="mb-1 text-sm font-medium text-black">รหัสแผนก</label>
-                        <select
-                          name="tbDptCode"
-                          value={formData.tbDptCode}
-                          onChange={(e) =>
-                            setFormData({ ...formData, tbDptCode: e.target.value })
-                          }
-                          className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        >
-                          <option value="">กรุณาเลือก</option>
-                          {departments.map((department) => (
-                            <option key={department.code} value={department.code}>
-                              {department.code}
-                            </option>
-                          ))}
-                        </select>
-                    </div>
 
-                    {/* ชุดที่ 3 */}
-                    <div className="flex flex-col">
-                      <label className="mb-1 text-sm font-medium text-black">แผนก</label>
-
-                          <select
-                          name="tbDptName"
-                          value={formData.tbDptName}
-                          onChange={(e) =>
-                            setFormData({ ...formData, tbDptName: e.target.value })
-                          }
-                          className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        >
-                          <option value="">กรุณาเลือก</option>
-                          {departments.map((department) => (
-                            <option key={department.name} value={department.name}>
-                              {department.name}
-                            </option>
-                          ))}
-                        </select>
-
-                    
-                    </div>
-
-                    {/* ชุดที่ 4 */}
-                    <div className="flex flex-col">
-                      <label className="mb-1 text-sm font-medium text-black">ชื่อ - นามสกุล</label>
-                      <input
-                        name="tbNameEmp"
-                        type="text"
-                        value={formData.tbNameEmp}
-                        onChange={(e) =>
-                          setFormData({ ...formData, tbNameEmp: e.target.value })
-                        }
-                        className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                      />
-                    </div>
-
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-4 px-6 py-4 md:grid-cols-3">
                     {/* ชุดที่ 1 */}
                     <div className="flex flex-col">
                       <label className="mb-1 text-sm font-medium text-black">ประเภท</label>
@@ -870,7 +853,7 @@ export default function RepairNotify() {
                     ></textarea>
                   </div>
                   {/* Footer */}
-                  <div className="flex justify-end gap-2 px-6 py-4 border-t border-black">
+                  <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray">
                     <button
                       type="submit"
                       className="flex items-center gap-1 px-4 py-2 text-white bg-green-600 rounded cursor-pointer hover:bg-green-800" 
