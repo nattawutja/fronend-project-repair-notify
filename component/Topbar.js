@@ -5,15 +5,19 @@ import { useEffect, useState } from "react";
 
 export default function TopBar({ isLoading }) {
     const [fullName , setFullname] = useState("");
+    const [divisionname , setDivisionname] = useState("");
     const pathname = usePathname();
 
     useEffect(() => {
 
         const storedName = localStorage.getItem("fullname");
+        const nameDivision = localStorage.getItem("name_dvi");
         if (storedName) {
             setFullname(storedName);
         }
-
+        if (nameDivision) {
+            setDivisionname(nameDivision);
+        }
     }, [pathname]);
 
     if(pathname == '/'){
@@ -44,7 +48,7 @@ export default function TopBar({ isLoading }) {
   
 
                 <div className="inline-flex">
-                    <span className="flex text-black me-2"> <FaUserCircle size={16} className="mt-1 me-2"/> {fullName}</span>
+                    <span className="flex text-black me-2"> <FaUserCircle size={16} className="mt-1 me-2"/> {fullName}  {divisionname}</span>
                     <button onClick={handleLogout} className="flex items-center gap-2 cursor-pointer hover:underline">
                         ออกจากระบบ <FaSignOutAlt size={16} className="mt-1"/>
                     </button>
