@@ -13,6 +13,7 @@ export default function RepairNotify() {
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [countData, setShowcountData] = useState(0);
   const [data, setData] = useState();
+  const [nameLogin, setNameLogin] = useState("");
 
   const [formData, setFormData] = useState({
     tbDateNoti: '',
@@ -78,7 +79,7 @@ export default function RepairNotify() {
         const json = await res.json();
         setData(json.data);
         setShowcountData(json.countdata);
-
+        setNameLogin(localStorage.getItem("fullname"));
       } catch (err) {
         console.error("เกิดข้อผิดพลาด fetch index:", err);
       }finally {
@@ -148,18 +149,8 @@ export default function RepairNotify() {
       return false;
     }
 
-    if(formData.tbToolNumber == ""){
-      alert("กรุณาระบุหมายเลขเครื่อง");
-      return false;
-    }
-
     if(formData.tbModel == ""){
       alert("กรุณาระบุรุ่น");
-      return false;
-    }
-    
-    if(formData.tbAssetID == ""){
-      alert("กรุณาระบุรหัสทรัพย์สิน");
       return false;
     }
 
@@ -352,250 +343,420 @@ export default function RepairNotify() {
         ระบบการแจ้งซ่อมเครื่องและอุปกรณ์คอมพิวเตอร์
       </label>
 
-      <form onSubmit={SearchData}>
-        <div className="grid grid-cols-12 gap-4 mt-5 fw-auto p-7" style={{backgroundColor:"rgb(236, 240, 240)"}}>
-          
-          <div className="flex flex-col items-end justify-center col-span-3 mt-5 md:col-span-2">
-            <button
-              type="button"
-              className="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-300 text-white font-small py-1 px-3 rounded shadow-md transition duration-200 cursor-pointer max-w-[120px]"
-              onClick={() => openModalAdd()}
-            >
-              <span className="text-xl">+</span>
-              <span>เพิ่มรายการ</span>
-            </button>
-          </div>
-        
-          <div className="flex flex-col justify-center col-span-2 ml-2 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">เลขที่เอกสาร</label>
-            <input
-              name="tbDocNoSearch"
-              type="text"
-              value={formDataSearch.tbDocNoSearch}
-              onChange={(e) =>
-                setFormDataSearch({ ...formDataSearch, tbDocNoSearch: e.target.value })
-              }
-              placeholder="ระบุเลขที่เอกสาร"
-              className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">ฝ่าย</label>
-            <select
-              name="tbDviNameSearch"
-              value={formDataSearch.tbDviNameSearch}
-              onChange={(e) =>
-                setFormDataSearch({ ...formDataSearch, tbDviNameSearch: e.target.value })
-              }
-              className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">กรุณาเลือก</option>
-              {division.map((divisions) => (
-                <option key={divisions.code} value={divisions.code}>
-                  {divisions.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">แผนก</label>
-            <select
-              name="tbDptNameSearch"
-              value={formDataSearch.tbDptNameSearch}
-              onChange={(e) =>
-                setFormDataSearch({ ...formDataSearch, tbDptNameSearch: e.target.value })
-              }
-              className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">กรุณาเลือก</option>
-              {departments.map((department) => (
-                <option key={department.name} value={department.name}>
-                  {department.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">รหัสแผนก</label>
-
-            <select
-              name="tbDptCodeSearch"
-              value={formDataSearch.tbDptCodeSearch}
-              onChange={(e) =>
-                setFormDataSearch({ ...formDataSearch, tbDptCodeSearch: e.target.value })
-              }
-              className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">กรุณาเลือก</option>
-              {departments.map((department) => (
-                <option key={department.code} value={department.code}>
-                  {department.code}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex flex-col justify-start col-span-2 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">ชนิดอุปกรณ์</label>
-            <select
-              name="tbToolSearch"
-              value={formDataSearch.tbToolSearch}
-              onChange={(e) =>
-                setFormDataSearch({ ...formDataSearch, tbToolSearch: e.target.value })
-              }
-              className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="">กรุณาเลือก</option>
-              {devices.map((device) => (
-                <option key={device.id} value={device.id}>
-                  {device.name_Device}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">รุ่น</label>
-            <input
-              name="tbModelSearch"
-              type="text"
-              value={formDataSearch.tbModelSearch}
-              onChange={(e) =>
-                setFormDataSearch({ ...formDataSearch, tbModelSearch: e.target.value })
-              }
-              placeholder="โปรดระบุรุ่นอุปกรณ์"
-              className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">วันที่แจ้ง</label>
-            <input
-              name="tbDateNotiStartSearch"
-              type="date"
-              value={formDataSearch.tbDateNotiStartSearch}
-              onChange={(e) =>
-                setFormDataSearch({ ...formDataSearch, tbDateNotiStartSearch: e.target.value })
-              }
-              className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">ถึงวันที่</label>
-            <input
-              name="tbDateNotiEndSearch"
-              type="date"
-              value={formDataSearch.tbDateNotiEndSearch}
-              onChange={(e) =>
-                setFormDataSearch({ ...formDataSearch, tbDateNotiEndSearch: e.target.value })
-              }
-              className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-
-          <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">หมายเลขเครื่อง</label>
-            <input
-              name="tbToolNumberSearch"
-              type="text"
-              value={formDataSearch.tbToolNumberSearch}
-              onChange={(e) =>
-                setFormDataSearch({ ...formDataSearch, tbToolNumberSearch: e.target.value })
-              }
-              placeholder="โปรดระบุหมายเลขเครื่อง"
-              className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-              
-          <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">รหัสทรัพย์สิน</label>
-            <input
-              name="tbAssetIDSearch"
-              type="text"
-              value={formDataSearch.tbAssetIDSearch}
-              onChange={(e) =>
-                setFormDataSearch({ ...formDataSearch, tbAssetIDSearch: e.target.value })
-              }
-              className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">ผู้แจ้ง</label>
-            <input
-              name="tbEmpNameSearch"
-              type="text"
-              value={formDataSearch.tbEmpNameSearch}
-              onChange={(e) =>
-                setFormDataSearch({ ...formDataSearch, tbEmpNameSearch: e.target.value })
-              }
-              className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
-          </div>
-
-          <div className="flex flex-col justify-center col-span-2 mt-1 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">ประเภท</label>
-            <select
-                name="tbSystemTypeSearch"
-                    value={formDataSearch.tbSystemTypeSearch}
-                  onChange={(e) =>
-                    setFormDataSearch({ ...formDataSearch, tbSystemTypeSearch: e.target.value })
-                  }
-                className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+      {nameLogin == "ผู้ดูแลระบบ แอดมิน" ? (
+        <form onSubmit={SearchData}>
+          <div className="grid grid-cols-12 gap-4 mt-5 fw-auto p-7" style={{backgroundColor:"rgb(236, 240, 240)"}}>
+            
+            <div className="flex flex-col items-end justify-center col-span-3 mt-5 md:col-span-2">
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-300 text-white font-small py-1 px-3 rounded shadow-md transition duration-200 cursor-pointer max-w-[120px]"
+                onClick={() => openModalAdd()}
               >
-                <option value="">กรุณาเลือก</option>
-                <option value="P">P/C</option>
-                <option value="A">AS/400</option>
-              </select>
-          </div>
+                <span className="text-xl">+</span>
+                <span>เพิ่มรายการ</span>
+              </button>
+            </div>
+          
+            <div className="flex flex-col justify-center col-span-2 ml-2 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">เลขที่เอกสาร</label>
+              <input
+                name="tbDocNoSearch"
+                type="text"
+                value={formDataSearch.tbDocNoSearch}
+                onChange={(e) =>
+                  setFormDataSearch({ ...formDataSearch, tbDocNoSearch: e.target.value })
+                }
+                placeholder="ระบุเลขที่เอกสาร"
+                className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
 
-          <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
-            <label className="mb-1 text-sm font-medium text-black">สถานะ</label>
+            <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">ฝ่าย</label>
               <select
-                name="tbStatusWorkSearch"
-                    value={formDataSearch.tbStatusWorkSearch}
-                  onChange={(e) =>
-                    setFormDataSearch({ ...formDataSearch, tbStatusWorkSearch: e.target.value })
-                  }
+                name="tbDviNameSearch"
+                value={formDataSearch.tbDviNameSearch}
+                onChange={(e) =>
+                  setFormDataSearch({ ...formDataSearch, tbDviNameSearch: e.target.value })
+                }
                 className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               >
                 <option value="">กรุณาเลือก</option>
-                <option value="0">รอ IT ตรวจสอบ</option>
-                <option value="1">กำลังดำเนินการ</option>
-                <option value="2">รอผู้แจ้งตรวจสอบ</option>
-                <option value="3">จบงาน</option>
+                {division.map((divisions) => (
+                  <option key={divisions.code} value={divisions.code}>
+                    {divisions.name}
+                  </option>
+                ))}
               </select>
-          </div>
+            </div>
 
+            <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">แผนก</label>
+              <select
+                name="tbDptNameSearch"
+                value={formDataSearch.tbDptNameSearch}
+                onChange={(e) =>
+                  setFormDataSearch({ ...formDataSearch, tbDptNameSearch: e.target.value })
+                }
+                className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">กรุณาเลือก</option>
+                {departments.map((department) => (
+                  <option key={department.name} value={department.name}>
+                    {department.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">รหัสแผนก</label>
+
+              <select
+                name="tbDptCodeSearch"
+                value={formDataSearch.tbDptCodeSearch}
+                onChange={(e) =>
+                  setFormDataSearch({ ...formDataSearch, tbDptCodeSearch: e.target.value })
+                }
+                className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">กรุณาเลือก</option>
+                {departments.map((department) => (
+                  <option key={department.code} value={department.code}>
+                    {department.code}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col justify-start col-span-2 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">ชนิดอุปกรณ์</label>
+              <select
+                name="tbToolSearch"
+                value={formDataSearch.tbToolSearch}
+                onChange={(e) =>
+                  setFormDataSearch({ ...formDataSearch, tbToolSearch: e.target.value })
+                }
+                className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              >
+                <option value="">กรุณาเลือก</option>
+                {devices.map((device) => (
+                  <option key={device.id} value={device.id}>
+                    {device.name_Device}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">รุ่น</label>
+              <input
+                name="tbModelSearch"
+                type="text"
+                value={formDataSearch.tbModelSearch}
+                onChange={(e) =>
+                  setFormDataSearch({ ...formDataSearch, tbModelSearch: e.target.value })
+                }
+                placeholder="โปรดระบุรุ่นอุปกรณ์"
+                className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">วันที่แจ้ง</label>
+              <input
+                name="tbDateNotiStartSearch"
+                type="date"
+                value={formDataSearch.tbDateNotiStartSearch}
+                onChange={(e) =>
+                  setFormDataSearch({ ...formDataSearch, tbDateNotiStartSearch: e.target.value })
+                }
+                className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">ถึงวันที่</label>
+              <input
+                name="tbDateNotiEndSearch"
+                type="date"
+                value={formDataSearch.tbDateNotiEndSearch}
+                onChange={(e) =>
+                  setFormDataSearch({ ...formDataSearch, tbDateNotiEndSearch: e.target.value })
+                }
+                className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+
+            <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">หมายเลขเครื่อง</label>
+              <input
+                name="tbToolNumberSearch"
+                type="text"
+                value={formDataSearch.tbToolNumberSearch}
+                onChange={(e) =>
+                  setFormDataSearch({ ...formDataSearch, tbToolNumberSearch: e.target.value })
+                }
+                placeholder="โปรดระบุหมายเลขเครื่อง"
+                className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+                
+            <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">รหัสทรัพย์สิน</label>
+              <input
+                name="tbAssetIDSearch"
+                type="text"
+                value={formDataSearch.tbAssetIDSearch}
+                onChange={(e) =>
+                  setFormDataSearch({ ...formDataSearch, tbAssetIDSearch: e.target.value })
+                }
+                className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="flex flex-col justify-center col-span-2 mt-2 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">ผู้แจ้ง</label>
+              <input
+                name="tbEmpNameSearch"
+                type="text"
+                value={formDataSearch.tbEmpNameSearch}
+                onChange={(e) =>
+                  setFormDataSearch({ ...formDataSearch, tbEmpNameSearch: e.target.value })
+                }
+                className="w-full px-3 py-1 text-black transition bg-white border rounded-md shadow-sm border-black-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            <div className="flex flex-col justify-center col-span-2 mt-1 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">ประเภท</label>
+              <select
+                  name="tbSystemTypeSearch"
+                      value={formDataSearch.tbSystemTypeSearch}
+                    onChange={(e) =>
+                      setFormDataSearch({ ...formDataSearch, tbSystemTypeSearch: e.target.value })
+                    }
+                  className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">กรุณาเลือก</option>
+                  <option value="P">P/C</option>
+                  <option value="A">AS/400</option>
+                </select>
+            </div>
+
+            <div className="flex flex-col justify-center col-span-2 ml-4 md:col-span-2">
+              <label className="mb-1 text-sm font-medium text-black">สถานะ</label>
+                <select
+                  name="tbStatusWorkSearch"
+                      value={formDataSearch.tbStatusWorkSearch}
+                    onChange={(e) =>
+                      setFormDataSearch({ ...formDataSearch, tbStatusWorkSearch: e.target.value })
+                    }
+                  className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">กรุณาเลือก</option>
+                  <option value="0">รอ IT ตรวจสอบ</option>
+                  <option value="1">กำลังดำเนินการ</option>
+                  <option value="2">ส่งซ่อม</option>
+                  <option value="3">รออะไหร่ในการซ่อม</option>
+                  <option value="4">รอผู้แจ้งตรวจสอบ</option>
+                  <option value="5">จบงาน</option>
+                </select>
+            </div>
+
+            
+
+            <div className="flex flex-col items-end justify-end col-span-1 mb-1 md:col-span-1">
+              <button 
+                type="submit"  
+                className="inline-flex items-center gap-1 bg-green-700 hover:bg-green-500 text-white font-small py-1 px-3 rounded shadow-md transition duration-200 cursor-pointer max-w-[150px]">
+                <FaSearch size={13} /> 
+                ค้นหา
+              </button>
+            </div>
+
+            <div className="flex flex-col items-start justify-end col-span-1 mb-1 md:col-span-1">
+              <button
+                type="button"
+                className="inline-flex items-center gap-1 bg-green-700 hover:bg-green-500 text-white font-small py-1 px-3 rounded shadow-md transition duration-200 cursor-pointer max-w-[150px]"
+                onClick={() => exportExcel()}
+              >
+                <FaFileExport size={13} />
+                <span>Export</span>
+              </button>
+            </div>
+            
+          </div>
+        </form>
+      ) : (
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-4xl bg-white border rounded-lg"
+        >
+          <div
+            className="flex items-center justify-between px-4 py-2 border-b border-white"
+            style={{ backgroundColor: "#feeb82" }}
+          >
+            {/* ฝั่งซ้าย */}
+            <div>
+              <h2 className="flex items-center gap-1 font-semibold text-black text-md">
+                <span>เพิ่มรายการแจ้งซ่อม</span>
+                <FaCog size={18} />
+              </h2>
+            </div>
           
-
-          <div className="flex flex-col items-end justify-end col-span-1 mb-1 md:col-span-1">
-            <button 
-              type="submit"  
-              className="inline-flex items-center gap-1 bg-green-700 hover:bg-green-500 text-white font-small py-1 px-3 rounded shadow-md transition duration-200 cursor-pointer max-w-[150px]">
-              <FaSearch size={13} /> 
-              ค้นหา
-            </button>
           </div>
 
-          <div className="flex flex-col items-start justify-end col-span-1 mb-1 md:col-span-1">
+          <div className="grid grid-cols-4 gap-4 px-6 py-4 md:grid-cols-4">
+            
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium text-black">วันที่</label>
+              <input
+                name="tbDateNoti"
+                value={formData.tbDateNoti}
+                onChange={(e) =>
+                  setFormData({ ...formData, tbDateNoti: e.target.value })
+                }
+                type="date"
+                className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+
+            {/* ชุดที่ 1 */}
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium text-black">ประเภท</label>
+                <select
+                  name="tbSystemType"
+                  value={formData.tbSystemType}
+                  onChange={(e) =>
+                    setFormData({ ...formData, tbSystemType: e.target.value })
+                  }
+                  className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">กรุณาเลือก</option>
+                  <option value="P">P/C</option>
+                  <option value="A">AS/400</option>
+                </select>
+            </div>
+
+            {/* ชุดที่ 2 */}
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium text-black">ชนิดอุปกรณ์</label>
+                <select
+                  name="tbTool"
+                  value={formData.tbTool}
+                  onChange={(e) =>
+                    setFormData({ ...formData, tbTool: e.target.value })
+                  }
+                  className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                >
+                  <option value="">กรุณาเลือก</option>
+                  {devices.map((device) => (
+                    <option key={device.id} value={device.id}>
+                      {device.name_Device}
+                    </option>
+                  ))}
+                </select>
+            </div>
+            
+            
+            {/* ชุดที่ 3 */}
+            <div className="flex flex-col">
+              <label className="mb-1 text-sm font-medium text-black">อื่นๆ</label>
+              <input
+                name="tbOtherTool"
+                type="text"
+                value={formData.tbOtherTool}
+                onChange={(e) =>
+                  setFormData({ ...formData, tbOtherTool: e.target.value })
+                }
+                placeholder="โปรดระบุ.."
+                className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              />
+            </div>
+            
+
+          </div>
+
+          <div className="grid grid-cols-3 gap-4 px-6 py-4 md:grid-cols-3">
+              {/* ชุดที่ 1 */}
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium text-black">หมายเลขเครื่อง</label>
+                <input
+                  name="tbToolNumber"
+                  type="text"
+                  value={formData.tbToolNumber}
+                  onChange={(e) =>
+                    setFormData({ ...formData, tbToolNumber: e.target.value })
+                  }
+                  placeholder="โปรดระบุหมายเลขเครื่อง"
+                  className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+
+              {/* ชุดที่ 2 */}
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium text-black">รุ่น</label>
+                <input
+                  name="tbModel"
+                  type="text"
+                  value={formData.tbModel}
+                  onChange={(e) =>
+                    setFormData({ ...formData, tbModel: e.target.value })
+                  }
+                  placeholder="โปรดระบุรุ่นอุปกรณ์"
+                  className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              
+              
+              {/* ชุดที่ 3 */}
+              <div className="flex flex-col">
+                <label className="mb-1 text-sm font-medium text-black">รหัสทรัพย์สิน</label>
+                <input
+                  name="tbAssetID"
+                  type="text"
+                  value={formData.tbAssetID}
+                  onChange={(e) =>
+                    setFormData({ ...formData, tbAssetID: e.target.value })
+                  }
+                  placeholder="โปรดรุบะรหัสทรัพย์สิน"
+                  className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              
+
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 px-6 py-4 md:grid-cols-1">
+              <label className="text-sm font-medium text-black">รายละเอียดอาการ<span className="text-red-500"> * กรุณาระบุรายละเอียดอาการให้ครบถ้วน</span></label>
+              <textarea
+                rows={4}
+                name="tbDesc"
+                value={formData.tbDesc}
+                onChange={(e) =>
+                  setFormData({ ...formData, tbDesc: e.target.value })
+                }
+                placeholder="กรอกข้อความรายละเอียดที่นี่..."
+                className="w-full px-4 py-2 text-black transition bg-white border border-gray-300 rounded-md shadow-sm resize-y focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              ></textarea>
+          </div>
+          {/* Footer */}
+          <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray">
             <button
-              type="button"
-              className="inline-flex items-center gap-1 bg-green-700 hover:bg-green-500 text-white font-small py-1 px-3 rounded shadow-md transition duration-200 cursor-pointer max-w-[150px]"
-              onClick={() => exportExcel()}
+              type="submit"
+              className="flex items-center gap-1 px-4 py-2 text-white bg-green-600 rounded cursor-pointer hover:bg-green-800" 
             >
-              <FaFileExport size={13} />
-              <span>Export</span>
+              <FaPaperPlane size={18} />
+              <span>บันทึกรายการ</span>
             </button>
           </div>
-          
-        </div>
-      </form>
+        </form>
+      ) 
+      }
+      
           
         <div className="flex flex-col justify-center mt-5 ">
           <div className="flex flex-col items-end justify-end mb-2 text-black underline" >
@@ -619,11 +780,12 @@ export default function RepairNotify() {
                 <th className="px-4 py-2 text-center border">วันที่แจ้ง</th>
                 <th className="px-4 py-2 text-center border">ผู้แจ้ง</th>
                 <th className="px-4 py-2 text-center border">สถานะ</th>
+                <th className="px-4 py-2 text-center border">ผู้รับผิดชอบ</th>
               </tr>
             </thead>
             <tbody> 
               {(data || []).map((item, index) => (
-                <tr onClick={() => handleRowClick(item.RepairID)} key={item.RepairID} className={`cursor-pointer text-black text-xs  hover:bg-blue-100 ${item.status == 'จบงาน' ? 'bg-green-400' : item.status == 'รอผู้แจ้งตรวจสอบ' ? 'bg-orange-400' : item.status == 'กำลังดำเนินการ' ? 'bg-blue-400' : 'even:bg-white odd:bg-[#ecf0f0]'} `}>
+                <tr onClick={() => handleRowClick(item.RepairID)} key={item.RepairID} className={`cursor-pointer text-black text-xs  hover:bg-blue-100 ${item.status == 'จบงาน' ? 'bg-green-400' : item.status == 'รอผู้แจ้งตรวจสอบ' ? 'bg-orange-400' : item.status == 'กำลังดำเนินการ' ? 'bg-blue-400' : item.status == 'รออะไหล่ในการซ่อม' ? 'bg-lime-400' : item.status == 'ส่งซ่อม' ? 'bg-purple-500' : 'even:bg-white odd:bg-[#ecf0f0]'} `}>
                   <td className="px-4 py-2 text-center border">{index + 1 + (currentPage * itemsPerPage)}</td>
                   <td className="px-4 py-2 text-center border">{item.RepairNo}</td>
                   <td className="px-4 py-2 border">{item.DptCode}</td>
@@ -638,6 +800,7 @@ export default function RepairNotify() {
                   <td className="px-4 py-2 text-center border">{item.cvcreatedate}</td>
                   <td className="px-4 py-2 border">{item.EmpName}</td>
                   <td className="px-4 py-2 text-center border">{item.status}</td>
+                  <td className="px-4 py-2 text-center border">{item.fullnameit}</td>
                 </tr>
               ))}
             </tbody>
