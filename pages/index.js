@@ -12,6 +12,7 @@ export default function Home() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [nameLogin, setNameLogin] = useState("");
 
     const sendDataLogin = async (e) => {
       e.preventDefault();
@@ -38,6 +39,7 @@ export default function Home() {
         localStorage.setItem("dptcode", result.dpt_code); // Department
         localStorage.setItem("dvicode", result.dvi_code); // Division
         localStorage.setItem("name_dvi", result.name_dvi); // nameDivision
+        setNameLogin(result.fullname);
         //console.log(result);
         setTimeout(() => {
           router.push("/repairNoti");
@@ -59,14 +61,14 @@ export default function Home() {
 
         <div className="flex flex-col items-center justify-center gap-4 p-10" style={{ backgroundColor: '#f3f6f9' }}>
             <label className="font-bold text-black ">
-              บริษัท โรงงานผลิตภัณฑ์อาหารไทย จำกัด
+              แจ้งซ่อมออนไลน์
             </label>
         
             <Image
               src="/waiwailogo.png"
               alt="My Photo"
-              width={200}
-              height={50}
+              width={180}
+              height={40}
             />
 
             <form
@@ -99,7 +101,7 @@ export default function Home() {
                   placeholder="รหัสผ่าน"
                 />
               </div>
-
+            
               <div className="flex flex-col items-center mt-5 w-72">
                 <button 
                   type="submit" 
@@ -133,12 +135,15 @@ export default function Home() {
                 } 
                   เข้าสู่ระบบ
                 </button>
+                  <div className="flex justify-center mt-2 text-black">
+                    พัฒนาโดย ฝ่าย MIS
+                  </div>
               </div>
             </form>
             
         </div>
         <label className="text-red-500">
-          หากไม่ทราบรหัสผ่าน ให้สอบถามหัวหน้างาน หรือฝ่ายบุคคล
+          หากไม่ทราบรหัสผ่าน ให้สอบถามหัวหน้างาน หรือฝ่าย MIS
         </label>
 
       </div>
