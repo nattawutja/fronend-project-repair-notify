@@ -30,7 +30,7 @@ export default function RepairNotifyView() {
     tbDesc: '',
   });
 
-  
+  const [formDataSaveIT,setFormDataSaveIT] = useState("");
   const [fullname, setFullname] = useState("");
   const [id, setId] = useState("");
   const [description,setDescription] = useState("");
@@ -195,12 +195,17 @@ useEffect(() => {
       return false;
     }
 
+    if(formDataSaveIT == ""){
+      alert("กรุณาระบุกระบวนการทำงาน");
+      return false;
+    }
+
     try {
-      const response = await fetch(`http://localhost:8000/saveApproveITFirst.php?idrp=${queryId}&description=${descriptionFirstEmp}&user_id=${id}&fullname=${fullname}`, {
+      const response = await fetch(`http://localhost:8000/saveApproveITFirst.php?idrp=${queryId}&description=${descriptionFirstEmp}&user_id=${id}&fullname=${fullname}&process=${formDataSaveIT}`, {
         method: "GET",
       });
       const resData = await response.json();
-      console.log(resData);
+      // console.log(resData);
       if (resData.success) {
         alert("บันทึกสำเร็จ");
         window.location.reload();
@@ -246,13 +251,19 @@ useEffect(() => {
     if (!queryId) {
       return;
     }
+
+    if(formDataSaveIT == ""){
+      alert("กรุณาระบุกระบวนการทำงาน");
+      return false;
+    }
+
     console.log(val);
     try {
-      const response = await fetch(`http://localhost:8000/saveApproveSendWork.php?id=${val}&idrp=${queryId}&posid=${posid}`, {
+      const response = await fetch(`http://localhost:8000/saveApproveSendWork.php?id=${val}&idrp=${queryId}&posid=${posid}&process=${formDataSaveIT}`, {
         method: "GET",
       });
       const resData = await response.json();
-      console.log(resData);
+      //console.log(resData);
       if (resData.success) {
         alert("บันทึกสำเร็จ");
         window.location.reload();
@@ -482,13 +493,15 @@ useEffect(() => {
               <table className="w-full mb-4 border border-gray-300 table-auto">
                 <thead>
                   <tr className="text-sm text-black bg-pink-200">
-                    <th colSpan={4} className="px-4 py-2 text-center">ผู้ตรวจสอบ</th>
+                    <th colSpan={6} className="px-4 py-2 text-center">ผู้ตรวจสอบ</th>
                   </tr>
                   <tr className="text-sm bg-pink-100">
                     <th className="px-4 py-2 text-center border border-gray-300">ลำดับ</th>
                     <th className="px-4 py-2 text-center border border-gray-300">ชื่อ-นามสกุล</th>
                     <th className="px-4 py-2 text-center border border-gray-300">รายละเอียด</th>
-                    <th className="px-4 py-2 text-center border border-gray-300">สถานะงาน</th>
+                    <th className="px-4 py-2 text-center border border-gray-300">การทำงาน</th>
+                    <th className="px-4 py-2 text-center border border-gray-300">สถานะ</th>
+                    <th className=""></th>
                   </tr>
                 </thead>
                 <tbody className="text-sm bg-white">
@@ -499,7 +512,7 @@ useEffect(() => {
                         <td className="px-4 py-2 text-center border border-gray-300">{item.fullName}</td>
                         <td className="px-4 py-2 text-center border border-gray-300">
                           {item.description !== "" ? (
-                            item.Approve === "O" ? (
+                            item.Approve === "O" || item.Approve === "S" || item.Approve === "W" ? (
                               <label className="font-bold text-blue-600">{item.description}</label>
                             ) : (
                               <label className="font-bold text-green-600">เสร็จงาน</label>
@@ -515,6 +528,33 @@ useEffect(() => {
                             />
                           )}
                         </td>
+                        
+                        <td>
+                          <div className="flex justify-center">
+                            { item.Approve == "Y" ? (
+                              <label className="font-bold text-green-600">
+                                ส่งงาน
+                              </label>
+                            ) : (
+                              <select
+                              disabled={fullname !== item.fullName}
+                              name="tbSaveApprove"
+                              onChange={(e) =>
+                                setFormDataSaveIT(e.target.value)
+                              }
+                              className="w-full px-2 py-3 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            >
+                              <option value="">กรุณาเลือก</option>
+                              <option value="O">ดำเนินการ</option>
+                              <option value="S">ส่งซ่อม</option>
+                              <option value="W">รออะไหล่ในการซ่อม</option>
+                              <option value="Y">ส่งงาน</option>
+                            </select>
+                            )}
+                            
+                          </div>
+                        </td>
+
                         <td className="px-4 py-2 text-center border border-gray-300">
                           <div className="flex justify-center">
                             {item.Approve === "Y" ? (
@@ -523,30 +563,49 @@ useEffect(() => {
                                 <br />
                                 {item.cvdateapprovedate} {item.cvdateapprovetime} น.
                               </label>
-                            ) : item.Approve === "O" ? (
-                              <button
-                                onClick={() => sendDataApproveSendWork(item.ApproveID, item.pos_id)}
-                                type="button"
-                                className={`px-3 py-2 text-center text-white bg-green-600 rounded hover:bg-green-400 disabled:bg-green-600 disabled:cursor-not-allowed ${
-                                  fullname !== item.fullName && id !== item.user_id ? "opacity-50" : ""
-                                }`}
-                                disabled={fullname !== item.fullName}
-                              >
-                                ส่งงาน
-                              </button>
+                            ) : item.Approve === "O" || item.Approve === "S" || item.Approve === "W"  ? (
+                              <label className="font-bold text-green-600">
+                                {
+                                  item.Approve === "O" ? (
+                                    "ดำเนินการ"
+                                  ) : item.Approve === "S" ? (
+                                    "ส่งซ่อม"
+                                  ) : (
+                                    "รออะไหร่ในการซ่อม"
+                                  )
+                                }
+                                <br />
+                                {item.cvdateprocessdate} {item.cvdateprocesstime} น.
+                              </label>
                             ) : (
-                              <button
-                                onClick={() => sendDataApproveSaveIT()}
-                                type="button"
-                                className={`gap-1 flex items-center justify-content-center px-3 py-2 text-center text-white bg-blue-600 rounded hover:bg-blue-400 disabled:bg-blue-600 disabled:cursor-not-allowed ${
-                                  fullname !== item.fullName && id !== item.user_id ? "opacity-50" : ""
-                                }`}
-                                disabled={fullname !== item.fullName}
-                              >
-                                <FaCog className="text-white" />
-                                ดำเนินการ
-                              </button>
-                            )}
+                              <label className="font-bold text-green-600">
+                                -
+                              </label>
+                            )
+                            }
+                          </div>
+                        </td>
+
+                        <td className="px-4 py-2 text-center border border-gray-300">
+                          <div className="flex justify-center">
+                            {
+                              item.Approve === "Y" ? (
+                                <label className="font-bold">
+                                  -
+                                </label>
+                              ) : (
+                                <button
+                                  onClick={() => sendDataApproveSendWork(item.ApproveID, item.pos_id)}
+                                  type="button"
+                                  className={`px-3 py-2 text-center text-white bg-green-600 rounded hover:bg-green-400 disabled:bg-green-600 disabled:cursor-not-allowed ${
+                                    fullname !== item.fullName && id !== item.user_id ? "opacity-50" : ""
+                                  }`}
+                                  disabled={fullname !== item.fullName}
+                                >
+                                  บันทึก
+                                </button>
+                              ) 
+                            }
                           </div>
                         </td>
                       </tr>
@@ -571,18 +630,40 @@ useEffect(() => {
                     </td>
                     <td className="px-4 py-2 text-center border border-gray-300">
                       <div className="flex justify-center">
-                         <button
-                          onClick={() => sendDataApproveSaveITFirst()}
-                          type="button"
-                          disabled={checkDataEmp == 0}
-                          className={`gap-1 flex items-center justify-content-center px-3 py-2 text-center text-white bg-blue-600 rounded hover:bg-blue-400 disabled:bg-blue-600 disabled:cursor-not-allowed
-                          ${checkDataEmp == 0 ? "opacity-50" : "" }`}
-                        >
-                          <FaCog className="text-white" />
-                          ดำเนินการ
-                        </button>
+                         <div className="flex justify-center">
+                            <select
+                              name="tbSaveApprove"
+                              value={formDataSaveIT}
+                              disabled={checkDataEmp == 0}
+                              onChange={(e) => setFormDataSaveIT(e.target.value)}
+                              className={`w-full px-2 py-3 text-black transition bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                              ${checkDataEmp == 0 ? "opacity-50 cursor-not-allowed" : "" }`}
+                            >
+                              <option value="">กรุณาเลือก</option>
+                              <option value="O">ดำเนินการ</option>
+                              <option value="S">ส่งซ่อม</option>
+                              <option value="W">รออะไหล่ในการซ่อม</option>
+                              <option value="Y">ส่งงาน</option>
+                            </select>
+                          </div>
                       </div>
                     </td>
+                    <td className="px-4 py-2 text-center border border-gray-300">
+                      -
+                    </td>
+                      <td className="px-4 py-2 text-center border border-gray-300">
+                        <div className="flex justify-center">
+                          <button
+                            onClick={() => sendDataApproveSaveITFirst()}
+                            type="button"
+                            disabled={checkDataEmp == 0}
+                            className={`gap-1 flex items-center justify-content-center px-3 py-2 text-center text-white  bg-green-600 rounded hover:bg-green-400 disabled:bg-green-600 disabled:cursor-not-allowed
+                            ${checkDataEmp == 0 ? "opacity-50" : "" }`}
+                          >
+                            บันทึก
+                          </button>
+                        </div>
+                      </td>
                   </tr>
                 )}
                   
@@ -618,9 +699,9 @@ useEffect(() => {
                                 onClick={() => sendDataApprove(item.ApproveID, item.pos_id)}
                                 type="button"
                                 className={`flex items-center gap-2 px-3 py-2 text-center text-white bg-green-600 rounded hover:bg-green-400 disabled:bg-green-600 disabled:cursor-not-allowed ${
-                                  fullname !== item.fullName && id !== item.user_id || data?.StatusWork != 2 ? "opacity-50" : ""
+                                  fullname !== item.fullName && id !== item.user_id || data?.StatusWork != 4 ? "opacity-50" : ""
                                 }`}
-                                disabled={fullname !== item.fullName || data?.StatusWork != 2}
+                                disabled={fullname !== item.fullName || data?.StatusWork != 4}
                               >
                                 <FaCheck className="text-white" />
                                 รับงาน
