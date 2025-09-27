@@ -347,7 +347,7 @@ export default function RepairNotify() {
         <form onSubmit={SearchData}>
           <div className="grid grid-cols-12 gap-4 mt-5 fw-auto p-7" style={{backgroundColor:"rgb(236, 240, 240)"}}>
             
-            <div className="flex flex-col items-end justify-center col-span-3 mt-5 md:col-span-2">
+            {/* <div className="flex flex-col items-end justify-center col-span-3 mt-5 md:col-span-2">
               <button
                 type="button"
                 className="inline-flex items-center gap-1 bg-blue-600 hover:bg-blue-300 text-white font-small py-1 px-3 rounded shadow-md transition duration-200 cursor-pointer max-w-[120px]"
@@ -356,7 +356,7 @@ export default function RepairNotify() {
                 <span className="text-xl">+</span>
                 <span>เพิ่มรายการ</span>
               </button>
-            </div>
+            </div> */}
           
             <div className="flex flex-col justify-center col-span-2 ml-2 md:col-span-2">
               <label className="mb-1 text-sm font-medium text-black">เลขที่เอกสาร</label>
