@@ -479,6 +479,10 @@ useEffect(() => {
                     <td className="px-4 py-2 border border-gray-300">{data?.name_Device}</td>
                   </tr>
                   <tr>
+                    <td className="px-4 py-2 font-medium border border-gray-300 text-end">อื่นๆ :</td>
+                    <td className="px-4 py-2 border border-gray-300">{data?.OtherTool}</td>
+                  </tr>
+                  <tr>
                     <td className="px-4 py-2 font-medium border border-gray-300 text-end">รุ่น :</td>
                     <td className="px-4 py-2 border border-gray-300">{data?.Model}</td>
                   </tr>
