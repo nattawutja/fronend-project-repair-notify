@@ -147,6 +147,13 @@ export default function RepairNotify() {
     if(formData.tbTool == ""){
       alert("กรุณาระบุชนิดอุปกรณ์");
       return false;
+    }else{
+      if(formData.tbTool == 7){
+        if(formData.tbOtherTool == ""){
+          alert("กรุณาระบุช่องอื่นๆเพื่อให้ทราบถึงชนิดอุปกรณ์")
+          return false;
+        }
+      }
     }
 
     if(formData.tbModel == ""){
@@ -184,7 +191,22 @@ export default function RepairNotify() {
       //console.log(resData);
       if (resData.success) {
         alert("บันทึกสำเร็จ");
-        window.location.reload();
+
+        if(formData.tbTool == 7){
+          window.location.reload();
+        }else{
+          try {
+            const response = await fetch(`http://localhost:8000/printFormPdf.php?id=${resData.DocNo}`, {
+              method: "GET",
+            });
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            window.open(url, "_blank");
+            window.location.reload();
+          } catch (error) {
+            console.error("Error printing PDF:", error);
+          }
+        }
       } else {
         alert("บันทึกล้มเหลว");
       }
