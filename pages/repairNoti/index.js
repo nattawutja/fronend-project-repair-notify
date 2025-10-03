@@ -807,7 +807,7 @@ export default function RepairNotify() {
             </thead>
             <tbody> 
               {(data || []).map((item, index) => (
-                <tr onClick={() => handleRowClick(item.RepairID)} key={item.RepairID} className={`cursor-pointer text-black text-xs  hover:bg-blue-100 ${item.status == 'จบงาน' ? 'bg-green-400' : item.status == 'รอผู้แจ้งตรวจสอบ' ? 'bg-orange-400' : item.status == 'กำลังดำเนินการ' ? 'bg-blue-400' : item.status == 'รออะไหล่ในการซ่อม' ? 'bg-lime-400' : item.status == 'ส่งซ่อม' ? 'bg-purple-500' : 'even:bg-white odd:bg-[#ecf0f0]'} `}>
+                <tr onClick={() => handleRowClick(item.RepairID)} key={item.RepairID} className={`cursor-pointer text-black text-xs  hover:bg-blue-100 even:bg-white odd:bg-[#ecf0f0] `}>
                   <td className="px-4 py-2 text-center border">{index + 1 + (currentPage * itemsPerPage)}</td>
                   <td className="px-4 py-2 text-center border">{item.RepairNo}</td>
                   <td className="px-4 py-2 border">{item.DptCode}</td>
@@ -821,8 +821,46 @@ export default function RepairNotify() {
                   <td className="px-4 py-2 border">{item.description}</td>
                   <td className="px-4 py-2 text-center border">{item.cvcreatedate}</td>
                   <td className="px-4 py-2 border">{item.EmpName}</td>
-                  <td className="px-4 py-2 text-center border">{item.status}</td>
+                  {
+                    item.status == "จบงาน" ? 
+                    (
+                      <td className="px-4 py-2 text-center border">
+                        <div className="bg-green-200 w-36 h-8 border-green-500 border-2 rounded-full text-center items-center flex justify-center font-bold ">{item.status}</div>
+                      </td>
+                    )
+                    : item.status == "รอผู้แจ้งตรวจสอบ" ?
+                    (
+                      <td className="px-4 py-2 text-center border">
+                        <div className="bg-orange-200 w-36 h-8 border-orange-500 border-2 rounded-full text-center items-center flex justify-center font-bold">{item.status}</div>
+                      </td>
+                    ) 
+                    : item.status == "กำลังดำเนินการ" ? 
+                    (
+                      <td className="px-4 py-2 text-center border">
+                        <div className="bg-blue-200 w-36 h-8 border-blue-500 border-2 rounded-full text-center items-center flex justify-center font-bold">{item.status}</div>
+                      </td>
+                    )
+                    : item.status == "รออะไหล่ในการซ่อม" ? 
+                    (
+                      <td className="px-4 py-2 text-center border">
+                        <div className="bg-lime-200 w-36 h-8 border-lime-500 border-2 rounded-full text-center items-center flex justify-center font-bold">{item.status}</div>
+                      </td>
+                    )
+                     : item.status == "ส่งซ่อม" ? 
+                    (
+                      <td className="px-4 py-2 text-center border">
+                        <div className="bg-purple-200 w-36 h-8 border-purple-500 border-2 rounded-full text-center items-center flex justify-center font-bold">{item.status}</div>
+                      </td>
+                    )
+                    : 
+                    (
+                      <td className="px-4 py-2 text-center border">
+                        <div className="bg-yellow-200 w-36 h-8 border-yellow-500 border-2 rounded-full text-center items-center flex justify-center font-bold">{item.status}</div>
+                      </td>
+                    )
+                  }
                   <td className="px-4 py-2 text-center border">{item.fullnameit}</td>
+                  
                 </tr>
               ))}
             </tbody>
