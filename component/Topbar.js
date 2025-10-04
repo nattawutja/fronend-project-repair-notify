@@ -40,7 +40,7 @@ export default function TopBar({ isLoading }) {
         <nav className="text-gray-600 bg-gray-200 shadow-md">
             <div className="flex items-center justify-between px-4 py-3 mx-auto max-w-7xl">
                 {/* Logo */}
-                <div className="text-xl font-bold tracking-wide">
+                <div className="text-xl font-bold tracking-wide bg-white px-2 py-2 rounded-lg border">
                     <button onClick={handleHome} className="flex items-center gap-2 cursor-pointer hover:underline">
                     <Image
                     src="/waiwailogo.png"
