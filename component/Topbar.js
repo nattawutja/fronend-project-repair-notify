@@ -68,7 +68,7 @@ export default function TopBar({ isLoading }) {
                             {fullName} ({divisionname})
                             </h1>
                         </div>
-                         <div className="bg-white px-2 py-2 ml-2 border rounded-lg cursor-pointer">
+                         <div className="bg-white px-2 py-2 ml-2 border rounded-lg cursor-pointer  shadow-md">
                             <button
                             onClick={handleLogout}
                             className="flex items-center gap-2 cursor-pointer hover:underline"
