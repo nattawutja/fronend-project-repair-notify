@@ -62,11 +62,20 @@ export default function TopBar({ isLoading }) {
                     {/* Logout button */}
     
 
-                    <div className="inline-flex">
-                        <span className="flex text-black me-2"> <FaUserCircle size={16} className="mt-1 me-2"/> {fullName}  {divisionname}</span>
-                        <button onClick={handleLogout} className="flex items-center gap-2 cursor-pointer hover:underline">
-                            ออกจากระบบ <FaSignOutAlt size={16} className="mt-1"/>
+                    <div className="inline-flex items-center">
+                        <div>
+                            <h1 className="text-4xl font-bold">
+                            {fullName} ({divisionname})
+                            </h1>
+                        </div>
+                         <div className="bg-white px-2 py-2 ml-2 border rounded-lg cursor-pointer">
+                            <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-2 cursor-pointer hover:underline"
+                        >
+                            ออกจากระบบ <FaSignOutAlt size={16} className="mt-1" />
                         </button>
+                         </div>
                     </div>
     
                 </div>
