@@ -355,7 +355,7 @@ export default function RepairNotify() {
       <Head>
         <title>ระบบการแจ้งซ่อมเครื่อง</title>
       </Head>
-      <Image
+      {/* <Image
         src="/waiwailogo.png"
         alt="My Photo"
         width={200}
@@ -363,11 +363,11 @@ export default function RepairNotify() {
       />
       <label className="text-xl font-bold text-black ">
         ระบบการแจ้งซ่อมเครื่องและอุปกรณ์คอมพิวเตอร์
-      </label>
+      </label> */}
 
       {nameLogin == "ผู้ดูแลระบบ แอดมิน" ? (
         <form onSubmit={SearchData}>
-          <div className="grid grid-cols-12 gap-4 mt-5 fw-auto p-7" style={{backgroundColor:"rgb(236, 240, 240)"}}>
+          <div className="grid grid-cols-12 gap-4 mt-5 fw-auto p-7 border rounded-md" style={{backgroundColor:"rgb(236, 240, 240)"}}>
             
             {/* <div className="flex flex-col items-end justify-center col-span-3 mt-5 md:col-span-2">
               <button
@@ -788,21 +788,21 @@ export default function RepairNotify() {
           <table className="w-full border border-collapse border-gray-300 rounded shadow-md table-auto">
             <thead>
               <tr className="text-xs text-black " style={{backgroundColor:"#fdd70a82"}}>
-                <th className="px-4 py-2 text-center border">ลำดับ</th>
-                <th className="px-4 py-2 text-center border">เลขที่เอกสาร</th>
-                <th className="px-4 py-2 text-center border">รหัสแผนก</th>
-                <th className="px-4 py-2 text-center border">แผนก</th>
-                <th className="px-4 py-2 text-center border">ฝ่าย</th>
-                <th className="px-4 py-2 text-center border">ประเภท</th>
-                <th className="px-4 py-2 text-center border">ชนิดอุปกรณ์</th>
-                <th className="px-4 py-2 text-center border">หมายเลขเครื่อง</th>
-                <th className="px-4 py-2 text-center border">รุ่น</th>
-                <th className="px-4 py-2 text-center border">รหัสทรัพย์สิน</th>
-                <th className="px-4 py-2 text-center border">รายละเอียด</th>
-                <th className="px-4 py-2 text-center border">วันที่แจ้ง</th>
-                <th className="px-4 py-2 text-center border">ผู้แจ้ง</th>
-                <th className="px-4 py-2 text-center border">สถานะ</th>
-                <th className="px-4 py-2 text-center border">ผู้รับผิดชอบ</th>
+                <th className="px-4 py-2 text-center border text-md">ลำดับ</th>
+                <th className="px-4 py-2 text-center border text-md">เลขที่เอกสาร</th>
+                <th className="px-4 py-2 text-center border text-md">รหัสแผนก</th>
+                <th className="px-4 py-2 text-center border text-md">แผนก</th>
+                <th className="px-4 py-2 text-center border text-md">ฝ่าย</th>
+                <th className="px-4 py-2 text-center border text-md">ประเภท</th>
+                <th className="px-4 py-2 text-center border text-md">ชนิดอุปกรณ์</th>
+                <th className="px-4 py-2 text-center border text-md">หมายเลขเครื่อง</th>
+                <th className="px-4 py-2 text-center border text-md">รุ่น</th>
+                <th className="px-4 py-2 text-center border text-md">รหัสทรัพย์สิน</th>
+                <th className="px-4 py-2 text-center border text-md">รายละเอียด</th>
+                <th className="px-4 py-2 text-center border text-md">วันที่แจ้ง</th>
+                <th className="px-4 py-2 text-center border text-md">ผู้แจ้ง</th>
+                <th className="px-4 py-2 text-center border text-md">สถานะ</th>
+                <th className="px-4 py-2 text-center border text-md">ผู้รับผิดชอบ</th>
               </tr>
             </thead>
             <tbody> 
@@ -825,37 +825,37 @@ export default function RepairNotify() {
                     item.status == "จบงาน" ? 
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-green-200 w-36 h-8 border-green-500 border-2 rounded-full text-center items-center flex justify-center font-bold ">{item.status}</div>
+                        <div className="bg-green-200 w-36 h-8 border-green-500 border-1 rounded-lg text-center items-center flex justify-center font-bold ">{item.status}</div>
                       </td>
                     )
                     : item.status == "รอผู้แจ้งตรวจสอบ" ?
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-orange-200 w-36 h-8 border-orange-500 border-2 rounded-full text-center items-center flex justify-center font-bold">{item.status}</div>
+                        <div className="bg-orange-200 w-36 h-8 border-orange-500 border-1 rounded-lg text-center items-center flex justify-center font-bold">{item.status}</div>
                       </td>
                     ) 
                     : item.status == "กำลังดำเนินการ" ? 
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-blue-200 w-36 h-8 border-blue-500 border-2 rounded-full text-center items-center flex justify-center font-bold">{item.status}</div>
+                        <div className="bg-blue-200 w-36 h-8 border-blue-500 border-1 rounded-lg text-center items-center flex justify-center font-bold">{item.status}</div>
                       </td>
                     )
                     : item.status == "รออะไหล่ในการซ่อม" ? 
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-lime-200 w-36 h-8 border-lime-500 border-2 rounded-full text-center items-center flex justify-center font-bold">{item.status}</div>
+                        <div className="bg-lime-200 w-36 h-8 border-lime-500 border-1 rounded-lg text-center items-center flex justify-center font-bold">{item.status}</div>
                       </td>
                     )
                      : item.status == "ส่งซ่อม" ? 
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-purple-200 w-36 h-8 border-purple-500 border-2 rounded-full text-center items-center flex justify-center font-bold">{item.status}</div>
+                        <div className="bg-purple-200 w-36 h-8 border-purple-500 border-1 rounded-lg text-center items-center flex justify-center font-bold">{item.status}</div>
                       </td>
                     )
                     : 
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-yellow-200 w-36 h-8 border-yellow-500 border-2 rounded-full text-center items-center flex justify-center font-bold">{item.status}</div>
+                        <div className="bg-yellow-200 w-36 h-8 border-yellow-500 border-1 rounded-lg text-center items-center flex justify-center font-bold">{item.status}</div>
                       </td>
                     )
                   }
