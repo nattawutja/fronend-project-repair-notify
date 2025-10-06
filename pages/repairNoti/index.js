@@ -75,7 +75,11 @@ export default function RepairNotify() {
 
     const fetchIndex = async () => {
       try {
-        const res = await fetch("http://localhost:8000/index.php");
+
+        const res = await fetch(`http://localhost:8000/index.php?empname=${localStorage.getItem("fullname")}&divisionname=${localStorage.getItem("name_dvi")}`, {
+          method: "GET",
+        });
+
         const json = await res.json();
         setData(json.data);
         setShowcountData(json.countdata);
