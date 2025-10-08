@@ -388,12 +388,12 @@ useEffect(() => {
 
   return loading ? (
     
-  <div className="flex flex-col items-center justify-center min-h-screen gap-4 pt-5 bg-white ">
-    <div className="loader">
-      
+    <div className="flex flex-col items-center justify-center min-h-screen gap-4 pt-5 bg-white ">
+      <div className="loader">
+        
+      </div>
     </div>
-  </div>
-) : (
+  ) : (
   <div className="flex flex-col items-center justify-start min-h-screen gap-4 pt-5 bg-white ">
     <Head>
       <title>รายละเอียดการแจ้งซ่อม</title>
