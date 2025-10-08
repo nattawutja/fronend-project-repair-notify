@@ -399,7 +399,7 @@ useEffect(() => {
       <title>รายละเอียดการแจ้งซ่อม</title>
     </Head>
     <div style={{width: '60%', minHeight: '600px'}}> {/* ปรับขนาด container */}
-      <table className="w-full border border-collapse border-gray-300 rounded shadow-md table-auto">
+      <table className="w-full border border-collapse border-gray-300 rounded shadow-lg table-auto">
         <thead>
           <tr className="text-sm text-black" style={{backgroundColor:"#fdd70a82"}} >
             <th className="w-1/6 px-4 py-2 text-center">โดย</th>
