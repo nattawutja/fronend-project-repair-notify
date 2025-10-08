@@ -14,6 +14,7 @@ export default function RepairNotify() {
   const [countData, setShowcountData] = useState(0);
   const [data, setData] = useState();
   const [nameLogin, setNameLogin] = useState("");
+  const [nameDivision, setNameDivision] = useState("");
 
   const [formData, setFormData] = useState({
     tbDateNoti: '',
@@ -84,6 +85,7 @@ export default function RepairNotify() {
         setData(json.data);
         setShowcountData(json.countdata);
         setNameLogin(localStorage.getItem("fullname"));
+        setNameDivision(localStorage.getItem("name_dvi"));
       } catch (err) {
         console.error("เกิดข้อผิดพลาด fetch index:", err);
       }finally {
@@ -369,7 +371,7 @@ export default function RepairNotify() {
         ระบบการแจ้งซ่อมเครื่องและอุปกรณ์คอมพิวเตอร์
       </label> */}
 
-      {nameLogin == "ผู้ดูแลระบบ แอดมิน" ? (
+      {nameDivision == "ฝ่ายบริหาร" || nameDivision == "ฝ่าย MIS" ? (
         <form onSubmit={SearchData}>
           <div className="grid grid-cols-12 gap-4 mt-5 fw-auto p-7 border rounded-md" style={{backgroundColor:"rgb(236, 240, 240)"}}>
             
@@ -429,7 +431,7 @@ export default function RepairNotify() {
               >
                 <option value="">กรุณาเลือก</option>
                 {departments.map((department) => (
-                  <option key={department.name} value={department.name}>
+                  <option key={department.code} value={department.name}>
                     {department.name}
                   </option>
                 ))}
@@ -791,7 +793,7 @@ export default function RepairNotify() {
           
           <table className="w-full border border-collapse border-gray-300 rounded shadow-md table-auto">
             <thead>
-              <tr className="text-xs text-black " style={{backgroundColor:"#fdd70a82"}}>
+              <tr className="text-xs text-black bg-yellow-200">
                 <th className="px-4 py-2 text-center border text-md">ลำดับ</th>
                 <th className="px-4 py-2 text-center border text-md">เลขที่เอกสาร</th>
                 <th className="px-4 py-2 text-center border text-md">รหัสแผนก</th>
@@ -829,37 +831,37 @@ export default function RepairNotify() {
                     item.status == "จบงาน" ? 
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-green-200 w-36 h-8 border-green-500 border-1 rounded-lg text-center items-center flex justify-center font-bold ">{item.status}</div>
+                        <div className="bg-green-200 w-36 h-8 border-green-500 border-1 rounded-lg text-center items-center flex justify-center font-bold shadow-md">{item.status}</div>
                       </td>
                     )
                     : item.status == "รอผู้แจ้งตรวจสอบ" ?
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-orange-200 w-36 h-8 border-orange-500 border-1 rounded-lg text-center items-center flex justify-center font-bold">{item.status}</div>
+                        <div className="bg-orange-200 w-36 h-8 border-orange-500 border-1 rounded-lg text-center items-center flex justify-center font-bold shadow-md">{item.status}</div>
                       </td>
                     ) 
                     : item.status == "กำลังดำเนินการ" ? 
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-blue-200 w-36 h-8 border-blue-500 border-1 rounded-lg text-center items-center flex justify-center font-bold">{item.status}</div>
+                        <div className="bg-blue-200 w-36 h-8 border-blue-500 border-1 rounded-lg text-center items-center flex justify-center font-bold shadow-md">{item.status}</div>
                       </td>
                     )
                     : item.status == "รออะไหล่ในการซ่อม" ? 
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-lime-200 w-36 h-8 border-lime-500 border-1 rounded-lg text-center items-center flex justify-center font-bold">{item.status}</div>
+                        <div className="bg-lime-200 w-36 h-8 border-lime-500 border-1 rounded-lg text-center items-center flex justify-center font-bold shadow-md">{item.status}</div>
                       </td>
                     )
                      : item.status == "ส่งซ่อม" ? 
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-purple-200 w-36 h-8 border-purple-500 border-1 rounded-lg text-center items-center flex justify-center font-bold">{item.status}</div>
+                        <div className="bg-purple-200 w-36 h-8 border-purple-500 border-1 rounded-lg text-center items-center flex justify-center font-bold shadow-md">{item.status}</div>
                       </td>
                     )
                     : 
                     (
                       <td className="px-4 py-2 text-center border">
-                        <div className="bg-yellow-200 w-36 h-8 border-yellow-500 border-1 rounded-lg text-center items-center flex justify-center font-bold">{item.status}</div>
+                        <div className="bg-yellow-200 w-36 h-8 border-yellow-500 border-1 rounded-lg text-center items-center flex justify-center font-bold shadow-md">{item.status}</div>
                       </td>
                     )
                   }
