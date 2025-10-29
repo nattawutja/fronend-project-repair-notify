@@ -17,6 +17,7 @@ export default function RepairNotify() {
   };
 
   const router = useRouter();
+  const [loadingSubmit,setLoadingSubmit] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showModalAdd, setShowModalAdd] = useState(false);
   const [countData, setShowcountData] = useState(0);
@@ -180,6 +181,8 @@ export default function RepairNotify() {
       return false;
     }
 
+    setLoadingSubmit(true);
+
     const fullname = localStorage.getItem("fullname");
     const id = localStorage.getItem("ID");
     const dptcode = localStorage.getItem("dptcode");
@@ -205,7 +208,7 @@ export default function RepairNotify() {
       //console.log(resData);
       if (resData.success) {
         alert("บันทึกสำเร็จ");
-
+        setLoadingSubmit(false);
         if(formData.tbTool == 7){
           window.location.reload();
         }else{
@@ -322,6 +325,8 @@ export default function RepairNotify() {
     setCurrentPage(event.selected);
     //console.log(event.selected);
 
+    let nameEmployee = localStorage.getItem("fullname");
+    let Empdivision = localStorage.getItem("name_dvi");
     try {
       const params = new URLSearchParams({
         tbDocNoSearch: formDataSearch.tbDocNoSearch,
@@ -337,8 +342,12 @@ export default function RepairNotify() {
         tbStatusWorkSearch: formDataSearch.tbStatusWorkSearch,
         tbEmpNameSearch: formDataSearch.tbEmpNameSearch,
         tbDviNameSearch: formDataSearch.tbDviNameSearch,
-        tbpage: event.selected.toString()
+        tbpage: event.selected.toString(),
+        tbEmpName: nameEmployee,
+        tbEmpDivision: Empdivision
       });
+
+      console.log(params,"<----------params");
 
       const response = await fetch(`http://localhost:8000/searchData.php?${params}`, {
         method: "GET",
@@ -780,10 +789,10 @@ export default function RepairNotify() {
               ></textarea>
           </div>
           {/* Footer */}
-          <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray">
+          <div className="flex justify-end gap-2 px-6 py-4 border-t border-gray ">
             <button
               type="submit"
-              className="flex items-center gap-1 px-4 py-2 text-white bg-green-600 rounded cursor-pointer hover:bg-green-800" 
+              className={`flex items-center gap-1 px-4 py-2 rounded text-white ${loadingSubmit ? 'bg-green-600 opacity-60 cursor-not-allowed' : 'bg-green-600 hover:bg-green-800 '}`}
             >
               <FaPaperPlane size={18} />
               <span>บันทึกรายการ</span>
