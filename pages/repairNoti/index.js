@@ -205,25 +205,25 @@ export default function RepairNotify() {
         body: JSON.stringify(dataToSend),
       });
       const resData = await response.json();
-      //console.log(resData);
+      console.log(resData);
       if (resData.success) {
         alert("บันทึกสำเร็จ");
         setLoadingSubmit(false);
-        if(formData.tbTool == 7){
+        //if(formData.tbTool == 7){
           window.location.reload();
-        }else{
-          try {
-            const response = await fetch(`http://localhost:8000/printFormPdf.php?id=${resData.DocNo}`, {
-              method: "GET",
-            });
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            window.open(url, "_blank");
-            window.location.reload();
-          } catch (error) {
-            console.error("Error printing PDF:", error);
-          }
-        }
+        // }else{
+        //   try {
+        //     const response = await fetch(`http://localhost:8000/printFormPdf.php?id=${resData.DocNo}`, {
+        //       method: "GET",
+        //     });
+        //     const blob = await response.blob();
+        //     const url = window.URL.createObjectURL(blob);
+        //     window.open(url, "_blank");
+        //     window.location.reload();
+        //   } catch (error) {
+        //     console.error("Error printing PDF:", error);
+        //   }
+        // }
       } else {
         alert("บันทึกล้มเหลว");
       }
